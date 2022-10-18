@@ -1,0 +1,36 @@
+{
+  "name": "xaerobiont/transfer-container",
+  "type": "library",
+  "keywords": [
+    "php",
+    "dto",
+    "container"
+  ],
+  "homepage": "https://github.com/xaerobiont/transfer-container",
+  "license": "MIT",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "name": "Dmitry Klyukin"
+    }
+  ],
+  "require": {
+    "php": "^8",
+    "ext-mbstring": "*",
+    "ext-zlib": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5",
+    "vimeo/psalm": "^4.29"
+  },
+  "autoload": {
+    "psr-4": {
+      "Xaerobiont\\TransferContainer\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Xaerobiont\\TransferContainer\\Tests\\": "tests/"
+    }
+  }
+}
