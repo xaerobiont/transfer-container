@@ -80,6 +80,24 @@ final class TransferContainerTest extends TestCase
         }
     }
 
+    public function testContainerMultibyte()
+    {
+        $cat = $this->generateDTO(Cat::class, ['color' => '白い']);
+        $cat2 = $this->generateDTO(Cat::class, ['color' => 'белый']);
+        $cat3 = $this->generateDTO(Cat::class, ['color' => 'أبيض']);
+
+        $container = new TransferContainer();
+        $container->put([$cat, $cat2, $cat3]);
+        $data = $container->pack();
+
+        $container = new TransferContainer();
+        $container->unpack($data);
+
+        foreach ($container as $cat) {
+            self::assertTrue(in_array($cat->getColor(), ['白い', 'белый', 'أبيض']));
+        }
+    }
+
     private function generateDTO(string $class, array $params = []): Transferable
     {
         $dto = new $class;

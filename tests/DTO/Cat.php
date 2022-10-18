@@ -8,6 +8,11 @@ class Cat implements Transferable
 {
     protected ?string $color = null;
 
+    public function getColor(): string
+    {
+        return $this->color;
+    }
+
     public function fromArray(array $data): void
     {
         $this->color = $data['color'];

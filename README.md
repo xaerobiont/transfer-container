@@ -2,6 +2,9 @@
 
 PHP container for transferring DTO between services
 
+[![Latest Stable Version](https://poser.pugx.org/xaerobiont/transfer-container/v/stable.png)](https://packagist.org/packages/xaerobiont/transfer-container)
+[![Total Downloads](https://poser.pugx.org/xaerobiont/transfer-container/downloads.png)](https://packagist.org/packages/xaerobiont/transfer-container)
+
 ## Goals
 
 - Allows to transfer different DTOs into single package
