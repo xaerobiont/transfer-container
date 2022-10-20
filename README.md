@@ -53,6 +53,6 @@ $container->unpack($transfer, [
 ]);
 
 foreach ($container as $item) {
-    // $item is MyDTO/YourDTO/ThemDTO object
+    // $item is MyDTO/OtherDTO/ThemDTO object
 }
 ```

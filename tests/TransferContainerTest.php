@@ -78,6 +78,9 @@ final class TransferContainerTest extends TestCase
         foreach ($container->getPayload() as $item) {
             self::assertTrue($item instanceof AnotherTree || $item instanceof AnotherCat);
         }
+
+        $container->purify();
+        self::assertEmpty($container->getPayload());
     }
 
     public function testContainerMultibyte()

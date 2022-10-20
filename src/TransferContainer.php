@@ -97,6 +97,12 @@ class TransferContainer implements ContainerInterface
         return $this->payload;
     }
 
+    public function purify(): void
+    {
+        $this->payload = [];
+        $this->rewind();
+    }
+
     public function jsonSerialize(): mixed
     {
         $payload = [];
