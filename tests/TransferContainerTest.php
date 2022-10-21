@@ -79,7 +79,7 @@ final class TransferContainerTest extends TestCase
             self::assertTrue($item instanceof AnotherTree || $item instanceof AnotherCat);
         }
 
-        $container->purify();
+        $container->clear();
         self::assertEmpty($container->getPayload());
     }
 
