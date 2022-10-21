@@ -8,7 +8,7 @@ class Cat implements Transferable
 {
     protected ?string $color = null;
 
-    public function getColor(): string
+    public function getColor(): ?string
     {
         return $this->color;
     }

@@ -41,5 +41,10 @@ interface ContainerInterface extends JsonSerializable, Iterator
      */
     public function getPayload(): array;
 
-    public function purify(): void;
+    /**
+     * Drops all payload
+     *
+     * @return void
+     */
+    public function clear(): void;
 }

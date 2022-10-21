@@ -55,4 +55,6 @@ $container->unpack($transfer, [
 foreach ($container as $item) {
     // $item is MyDTO/OtherDTO/ThemDTO object
 }
+
+$container->clear();
 ```

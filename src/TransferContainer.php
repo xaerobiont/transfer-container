@@ -97,7 +97,7 @@ class TransferContainer implements ContainerInterface
         return $this->payload;
     }
 
-    public function purify(): void
+    public function clear(): void
     {
         $this->payload = [];
         $this->rewind();
