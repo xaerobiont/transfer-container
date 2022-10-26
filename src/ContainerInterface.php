@@ -7,7 +7,7 @@ namespace Xaerobiont\TransferContainer;
 use Iterator;
 use JsonSerializable;
 
-interface ContainerInterface extends JsonSerializable, Iterator
+interface ContainerInterface extends JsonSerializable
 {
     /**
      * Put object or array of objects to container payload
@@ -29,17 +29,12 @@ interface ContainerInterface extends JsonSerializable, Iterator
      * Unpack data
      *
      * @param string $packed
-     * @param array<string, string> $map key => value array which define how to populate received payload. Example: 'x\y\z' => 'w\d\s'
+     * @param array<string, string> $map key => value array which define how to populate received payload. 'x\y\z' => 'w\d\s'
      * @param bool $skipInvalid
      *
-     * @return void
+     * @return Iterator
      */
-    public function unpack(string $packed, array $map, bool $skipInvalid): void;
-
-    /**
-     * @return Transferable[]
-     */
-    public function getPayload(): array;
+    public static function unpack(string $packed, array $map, bool $skipInvalid): Iterator;
 
     /**
      * Drops all payload

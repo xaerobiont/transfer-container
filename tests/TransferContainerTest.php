@@ -37,13 +37,10 @@ final class TransferContainerTest extends TestCase
 
         // sending data through stars and galaxies...
 
-        $receiver = new TransferContainer();
-        $receiver->unpack($data);
-
         $receivedCats = 0;
         $receivedTrees = 0;
         $receivedLaptops = 0;
-        foreach ($receiver as $item) {
+        foreach (TransferContainer::unpack($data) as $item) {
             self::assertInstanceOf(Transferable::class, $item);
             if ($item instanceof Laptop) {
                 $receivedLaptops++;
@@ -69,18 +66,13 @@ final class TransferContainerTest extends TestCase
         $container->put([$cat, $tree]);
         $data = $container->pack();
 
-        $container = new TransferContainer();
-        $container->unpack($data, [
+        $unpackMap = [
             Cat::class => AnotherCat::class,
             Tree::class => AnotherTree::class,
-        ]);
-
-        foreach ($container->getPayload() as $item) {
+        ];
+        foreach (TransferContainer::unpack($data, $unpackMap) as $item) {
             self::assertTrue($item instanceof AnotherTree || $item instanceof AnotherCat);
         }
-
-        $container->clear();
-        self::assertEmpty($container->getPayload());
     }
 
     public function testContainerMultibyte()
@@ -93,10 +85,7 @@ final class TransferContainerTest extends TestCase
         $container->put([$cat, $cat2, $cat3]);
         $data = $container->pack();
 
-        $container = new TransferContainer();
-        $container->unpack($data);
-
-        foreach ($container as $cat) {
+        foreach (TransferContainer::unpack($data) as $cat) {
             self::assertTrue(in_array($cat->getColor(), ['白い', 'белый', 'أبيض']));
         }
     }

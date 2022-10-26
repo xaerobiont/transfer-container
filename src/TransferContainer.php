@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Xaerobiont\TransferContainer;
 
+use Iterator;
 use Throwable;
 
 class TransferContainer implements ContainerInterface
@@ -12,7 +13,6 @@ class TransferContainer implements ContainerInterface
      * @var Transferable[]
      */
     protected array $payload = [];
-    protected int $iteratorPosition = 0;
 
     public function pack(): string
     {
@@ -24,15 +24,16 @@ class TransferContainer implements ContainerInterface
      * @param array<string, string> $map
      * @param bool $skipInvalid
      *
-     * @return void
+     * @return Iterator
      * @throws TransferContainerException
      */
-    public function unpack(string $packed, array $map = [], bool $skipInvalid = false): void
+    public static function unpack(string $packed, array $map = [], bool $skipInvalid = false): Iterator
     {
         $raw = json_decode(gzinflate($packed), true);
         if (!is_array($raw)) {
             throw new TransferContainerException('Unpack failed: Invalid pack provided', 0);
         }
+
         foreach ($raw as $item) {
             try {
                 if (
@@ -57,7 +58,8 @@ class TransferContainer implements ContainerInterface
                     );
                 }
                 $object->fromArray($item['data']);
-                $this->put($object);
+
+                yield $object;
             } catch (Throwable $e) {
                 if (!$skipInvalid) {
                     throw new TransferContainerException("Unpack failed: {$e->getMessage()}", 0, $e);
@@ -89,21 +91,12 @@ class TransferContainer implements ContainerInterface
         }
     }
 
-    /**
-     * @return Transferable[]
-     */
-    public function getPayload(): array
-    {
-        return $this->payload;
-    }
-
     public function clear(): void
     {
         $this->payload = [];
-        $this->rewind();
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         $payload = [];
         foreach ($this->payload as $item) {
@@ -114,30 +107,5 @@ class TransferContainer implements ContainerInterface
         }
 
         return $payload;
-    }
-
-    public function valid(): bool
-    {
-        return isset($this->payload[$this->iteratorPosition]);
-    }
-
-    public function current(): Transferable
-    {
-        return $this->payload[$this->iteratorPosition];
-    }
-
-    public function rewind(): void
-    {
-        $this->iteratorPosition = 0;
-    }
-
-    public function key(): int
-    {
-        return $this->iteratorPosition;
-    }
-
-    public function next(): void
-    {
-        ++$this->iteratorPosition;
     }
 }

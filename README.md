@@ -17,7 +17,7 @@ PHP container for transferring DTO between services
 ```json
 {
   "require": {
-    "xaerobiont/transfer-container": "^1"
+    "xaerobiont/transfer-container": "^2"
   }
 }
 ```
@@ -45,16 +45,13 @@ $container = new TransferContainer();
 $container->put($package);
 
 $transfer = $container->pack();
+$container->clear();
 
 // receiver side
-$container = new TransferContainer();
-$container->unpack($transfer, [
+$map = [
     YourDTO::class => OtherDTO::class
-]);
-
-foreach ($container as $item) {
+];
+foreach (TransferContainer::unpack($transfer, $map) as $item) {
     // $item is MyDTO/OtherDTO/ThemDTO object
 }
-
-$container->clear();
 ```
