@@ -10,13 +10,13 @@ use Throwable;
 class TransferContainer implements ContainerInterface
 {
     /**
-     * @var Transferable[]
+     * @var PayloadItem[]
      */
     protected array $payload = [];
 
     public function pack(): string
     {
-        return gzdeflate(json_encode($this), 9);
+        return gzdeflate(json_encode($this->payload), 9);
     }
 
     /**
@@ -36,28 +36,27 @@ class TransferContainer implements ContainerInterface
 
         foreach ($raw as $item) {
             try {
-                if (
-                    !is_array($item) || empty($item['class']) || empty($item['data']) ||
-                    !is_string($item['class']) || !is_array($item['data'])
-                ) {
+                if (!is_array($item)) {
                     throw new TransferContainerException('Invalid pack item provided');
                 }
-                $className = array_key_exists($item['class'], $map) ? $map[$item['class']] : $item['class'];
+                /** @psalm-suppress MixedArgument */
+                $payloadItem = new PayloadItem($item['class'], $item['data']);
+                $className = array_key_exists($payloadItem->getClass(), $map) ?
+                    $map[$payloadItem->getClass()] :
+                    $payloadItem->getClass();
                 if (!class_exists($className)) {
                     throw new TransferContainerException(
                         "Received class $className does not exist and should be added to map"
                     );
                 }
-                /**
-                 * @psalm-suppress MixedMethodCall
-                 */
+                /** @psalm-suppress MixedMethodCall */
                 $object = new $className();
                 if (!($object instanceof Transferable)) {
                     throw new TransferContainerException(
                         'Transfer container object must implement Transferable interface'
                     );
                 }
-                $object->fromArray($item['data']);
+                $object->fromArray($payloadItem->getData());
 
                 yield $object;
             } catch (Throwable $e) {
@@ -77,9 +76,7 @@ class TransferContainer implements ContainerInterface
     public function put(Transferable|array $objects): void
     {
         if (!is_array($objects)) {
-            $this->payload[] = $objects;
-
-            return;
+            $objects = [$objects];
         }
         foreach ($objects as $object) {
             if (!($object instanceof Transferable)) {
@@ -87,25 +84,12 @@ class TransferContainer implements ContainerInterface
                     'Transfer container object must implement Transferable interface'
                 );
             }
-            $this->payload[] = $object;
+            $this->payload[] = new PayloadItem($object::class, $object->toArray());
         }
     }
 
     public function clear(): void
     {
         $this->payload = [];
-    }
-
-    public function jsonSerialize(): array
-    {
-        $payload = [];
-        foreach ($this->payload as $item) {
-            $payload[] = [
-                'class' => $item::class,
-                'data' => $item->toArray(),
-            ];
-        }
-
-        return $payload;
     }
 }

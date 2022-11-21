@@ -11,10 +11,14 @@ use Xaerobiont\TransferContainer\Tests\DTO\Laptop;
 use Xaerobiont\TransferContainer\Tests\DTO\Tree;
 use Xaerobiont\TransferContainer\Transferable;
 use Xaerobiont\TransferContainer\TransferContainer;
+use Xaerobiont\TransferContainer\TransferContainerException;
 
 final class TransferContainerTest extends TestCase
 {
-    public function testContainer()
+    /**
+     * @test
+     */
+    public function test_container()
     {
         $container = new TransferContainer();
         self::assertInstanceOf(ContainerInterface::class, $container);
@@ -58,7 +62,10 @@ final class TransferContainerTest extends TestCase
         self::assertEquals(10, $receivedTrees);
     }
 
-    public function testContainerUnpackMap()
+    /**
+     * @test
+     */
+    public function test_container_unpack_map()
     {
         $container = new TransferContainer();
         $cat = $this->generateDTO(Cat::class, ['color' => 'black']);
@@ -75,7 +82,10 @@ final class TransferContainerTest extends TestCase
         }
     }
 
-    public function testContainerMultibyte()
+    /**
+     * @test
+     */
+    public function test_container_multibyte()
     {
         $cat = $this->generateDTO(Cat::class, ['color' => '白い']);
         $cat2 = $this->generateDTO(Cat::class, ['color' => 'белый']);

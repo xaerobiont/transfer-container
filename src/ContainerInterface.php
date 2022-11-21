@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Xaerobiont\TransferContainer;
 
 use Iterator;
-use JsonSerializable;
 
-interface ContainerInterface extends JsonSerializable
+interface ContainerInterface
 {
     /**
      * Put object or array of objects to container payload
