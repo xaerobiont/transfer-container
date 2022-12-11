@@ -6,7 +6,7 @@ namespace Xaerobiont\TransferContainer;
 
 use JsonSerializable;
 
-final class PayloadItem implements JsonSerializable
+final readonly class PayloadItem implements JsonSerializable
 {
     function __construct(private string $class, private array $data)
     {
